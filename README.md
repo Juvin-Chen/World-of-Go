@@ -36,7 +36,7 @@ This repository documents my journey of learning the Go programming language, co
   - 学习 JSON 数据的序列化与反序列化。
 
 - **`Stage7_Database_ORM/`**: 
-  - 结合你熟悉的 MySQL，学习使用 `database/sql` 或 GORM 框架进行数据库操作。
+  - 学习使用 `database/sql` 或 GORM 框架进行数据库操作。
   - 实践 CURD (增删改查) 操作。
 
 - **`Study_Plan.md`**: 
