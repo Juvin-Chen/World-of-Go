@@ -166,14 +166,34 @@ func function_name( [parameter list] ) [return_types] {
 函数作为另外一个函数的实参	函数定义后可作为另外一个函数的实参数传入
 闭包	闭包是匿名函数，可在动态编程中使用  == C++ lambda表达式
 方法	方法就是一个包含了接受者的函数
+
+对比一下 C++
+如果不看代码，光看逻辑：
+
+函数作为实参 ≈ C++ 里的 函数指针。 （你把函数地址传给别人，别人通过地址调用代码）。
+
+闭包 ≈ C++ 里的 类（Class）对象。
+
 */
 
-// 函数作为实参
+// 1 函数作为实参
+/*
+这个概念其实就是：“外包”。
+想象你写了一个 计算器 函数，但你不想把具体的加减乘除写死在里面。你想让这个计算器很灵活，你给它什么工具，它就用什么工具算。
+
+在 Go 语言里，函数（代码逻辑）可以像数字（数据）一样传递。
+*/
+
+// op 是一个变量，它是一个“接收两个int并返回int的函数”
 func compute(a, b int, op func(int, int) int) int {
 	return op(a, b)
 }
 
+// 这是一个加法图纸
 func add(x, y int) int { return x + y }
+
+// 这是一个减法图纸
+func sub(x, y int) int { return x - y }
 
 // 2 闭包函数
 /*
@@ -184,9 +204,64 @@ func add(x, y int) int { return x + y }
 但在 Go 里，编译器会进行逃逸分析 (Escape Analysis)，如果发现闭包用了局部变量，它会把这个变量自动搬到堆 (Heap) 上，保证它不会死掉。
 */
 
+// 这个函数不返回数字，而是返回一个“函数”！
+// 这个返回出来的函数，就是“闭包”
+func createCounter() func() int {
+	x := 0
+
+	return func() int {
+		x++ //这个变量会被记住
+		return x
+	}
+}
+
+// 3 方法
+// 方法就是一个“带接收者 (Receiver)”的函数，就是 C++ 里的 类成员函数 (Member Function)
+/*
+type Circle struct {
+    Radius float64
+}
+
+// 这里的 (c Circle) 就是接收者，类似于 C++ 的 this
+// 这句话的意思是：给 Circle 类型绑定一个叫 Area 的方法
+func (c Circle) Area() float64 {
+    return 3.14 * c.Radius * c.Radius
+}
+*/
+
 func demo3() {
+	// 简单函数调用
 	c := max(5, 6)
 	fmt.Println(c)
+
+	// 闭包函数调用
+	counterA := createCounter()
+
+	fmt.Println(counterA()) // 输出 1（背包里的 x 变成 1）
+	fmt.Println(counterA()) // 输出 2（背包里的 x 变成 2，它记得！）
+	fmt.Println(counterA()) // 输出 3
+
+	// 这个是全新的背包客，它背着它自己的 x=0，跟 A 没关系
+	counterB := createCounter()
+	fmt.Println(counterB()) // 输出 1
+
+	// 类似C++lambda，但是go版本不需要考虑捕获列表 C++的是[](){}
+	var a = func() int {
+		return 100
+	}
+	println(a)
+
+	// 随时调用
+	f := func(x int) int {
+		return x * x
+	}
+	fmt.Println(f(10))
+
+	// 定义完直接在后面加 (100)，立刻执行
+	result := func(x int) int {
+		return x + 1
+	}(100)
+	fmt.Println(result) // 输出 101
 
 }
 
@@ -202,5 +277,22 @@ func max(num1, num2 int) int {
 /*------------------------------------------------------------------------*/
 
 /*
+demo4 Go 语言变量作用域
 
- */
+Go 语言中变量可以在三个地方声明：
+`函数内定义的变量称为局部变量
+`函数外定义的变量称为全局变量
+`函数定义中的变量称为形式参数
+
+全局变量
+在函数体外声明的变量称之为全局变量，全局变量可以在整个包甚至外部包（被导出后）使用,其实就是根据大小写判断
+全局变量可以在任何函数中使用。
+
+Go 语言程序中全局变量与局部变量名称可以相同，但是函数内的局部变量会被优先考虑
+
+初始化局部和全局变量
+不同类型的局部和全局变量默认值为：
+int	0
+float32	0
+pointer	nil
+*/
