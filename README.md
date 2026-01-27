@@ -33,3 +33,5 @@ This repository documents my journey of learning the Go programming language, co
 
 - **`go.mod`**: 
   - Go 模块定义文件。
+    
+> 这是一个用于学习的仓库，所以全是手搓的代码，格式和写法可能没那么规范，按个人习惯写的...
