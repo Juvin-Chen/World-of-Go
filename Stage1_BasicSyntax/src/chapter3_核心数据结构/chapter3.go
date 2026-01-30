@@ -311,18 +311,267 @@ func printBook_(book *Book) {
 /*--------------------------------------------------------------------------------------------------*/
 /*
 demo4 go语言切片
+
+0.0 和数组的区分！！！
+[]有数字 = 数组（定长），[]无数字 = 切片（变长）
+
 Go 语言切片是对数组的抽象。
 Go 数组的长度不可改变，在特定场景中这样的集合就不太适用，Go 中提供了一种灵活，功能强悍的内置类型切片("动态数组")，与数组相比切片的长度是不固定的，可以追加元素，在追加时可能使切片的容量增大。
 
+1.定义切片
+1.1你可以声明一个未指定大小的数组来定义切片：
+var identifier []type	切片不需要说明长度。
 
+1.2或使用 make() 函数来创建切片:
+var slice1 []type = make([]type, len)
+也可以简写为
+slice1 := make([]type, len)
+也可以指定容量，其中 capacity 为可选参数。
+make([]T, length, capacity)
+这里 len 是数组的长度并且也是切片的初始长度。
+
+2.切片初始化
+s :=[] int {1,2,3 }
+直接初始化切片，[] 表示是切片类型，{1,2,3} 初始化值依次是 1,2,3，其 cap=len=3。
+- s := arr[:]
+初始化切片 s，是数组 arr 的引用。
+
+- s := arr[startIndex:endIndex]
+将 arr 中从下标 startIndex 到 endIndex-1 下的元素创建为一个新的切片。
+
+- s := arr[startIndex:]
+默认 endIndex 时将表示一直到arr的最后一个元素。
+
+- s := arr[:endIndex]
+默认 startIndex 时将表示从 arr 的第一个元素开始。
+
+- s1 := s[startIndex:endIndex]
+通过切片 s 初始化切片 s1。
+
+- s :=make([]int,len,cap)
+通过内置函数 make() 初始化切片s，[]int 标识为其元素类型为 int 的切片。
+
+3.空(nil)切片
+一个切片在未初始化之前默认为 nil
+
+4.切片截取
+可以通过设置下限及上限来设置截取切片 [lower-bound:upper-bound]
+
+5.append() 和 copy() 函数
+如果想增加切片的容量，我们必须创建一个新的更大的切片并把原分片的内容都拷贝过来。
+下面的代码描述了从拷贝切片的 copy 方法和向切片追加新元素的 append 方法。
 */
+
+func demo4() {
+	/*
+		切片是可索引的，并且可以由 len() 方法获取长度。
+		切片提供了计算容量的方法 cap() 可以测量切片最长可以达到多少。
+	*/
+	var numbers = make([]int, 3, 5)
+	printSlice(numbers)
+
+	// 空(nil)切片
+	var numbers_2 []int
+	printSlice(numbers_2)
+	if numbers == nil {
+		fmt.Println("it's a nil Slice")
+	}
+
+	// 切片截取
+	numbers_3 := []int{0, 1, 2, 3, 4, 5, 6, 7, 8}
+	printSlice(numbers_3)
+	fmt.Println("numbers_3[1:4] ==", numbers_3[1:4]) // 左闭右开
+
+	// 默认下限为0, 上限为 len(s)
+	fmt.Println("numbers_3[:3] ==", numbers_3[:3])
+	fmt.Println("numbers_3[4:] ==", numbers_3[4:])
+
+	number1 := numbers_3[:2] // 打印子切片从索引  0(包含) 到索引 2(不包含)
+	printSlice(number1)
+
+	number2 := numbers_3[2:5] // 打印子切片从索引 2(包含) 到索引 5(不包含
+	printSlice(number2)
+	// 上面两个就是创建子切片再打印的方式
+
+	// 5.append() & copy() 函数
+	var nums []int
+	printSlice(nums)
+	nums = append(nums, 0)
+	printSlice(nums)
+
+	nums = append(nums, 1)
+	printSlice(nums)
+
+	/* 创建切片 nums1 是之前切片的两倍容量*/
+	nums_1 := make([]int, len(nums), (cap(nums) * 2))
+	copy(nums, nums_1) // copy
+	printSlice(nums_1)
+}
+
+// 打印切片函数
+func printSlice(x []int) {
+	fmt.Printf("len=%d cap=%d slice=%v\n", len(x), cap(x), x)
+}
 
 /*--------------------------------------------------------------------------------------------------*/
 /*
 demo5 go语言范围
+Go 语言中 range 关键字用于 for 循环中迭代数组(array)、切片(slice)、通道(channel)或集合(map)的元素。
+在数组和切片中它返回元素的索引和索引对应的值，在集合中返回 key-value 对。
+for 循环的 range 格式可以对 slice、map、数组、字符串等进行迭代循环。格式如下：
+for key, value := range oldMap {
+    newMap[key] = value
+}
+以上代码中的 key 和 value 是可以省略。
+如果只想读取 key，格式如下：
+- for key := range oldMap
+或者这样：
+- for key, _ := range oldMap
+如果只想读取 value，格式如下：
+- for _, value := range oldMap
+
+字符串
+range 迭代字符串时，返回每个字符的索引和 Unicode 代码点（rune）。
 */
+
+func demo5() {
+	var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
+	for i, v := range pow {
+		fmt.Printf("2**%d = %d\n", i, v)
+	}
+
+	// string range
+	for i, c := range "hello" {
+		fmt.Printf("index: %d, char: %c\n", i, c)
+	}
+
+	map1 := map[int]float32{
+		1: 1.0,
+		2: 2.0,
+		3: 3.0,
+		4: 4.0,
+	}
+
+	for key, value := range map1 {
+		fmt.Printf("key is: %d - value is: %f\n", key, value)
+	}
+	for key := range map1 {
+		fmt.Printf("key is: %d", key)
+	}
+	for _, value := range map1 {
+		fmt.Printf("value is: %f\n", value)
+	}
+}
+
+func demo5_2() {
+	nums := []int{2, 3, 4}
+	sum := 0
+	for _, num := range nums {
+		sum += num
+	}
+	fmt.Println("sum:", sum)
+
+	for i, num := range nums {
+		if num == 3 {
+			fmt.Println("index:", i)
+		}
+	}
+	// range 也可以用在map键值对上
+	kvs := map[string]string{"a": "apple", "b": "banana"}
+	for k, v := range kvs {
+		fmt.Println("%s -> %s\n", k, v)
+	}
+
+	//range也可以用来枚举 Unicode 字符串。第一个参数是字符的索引，第二个是字符（Unicode的值）本身。
+	for i, c := range "go" {
+		fmt.Println(i, c)
+	}
+}
 
 /*--------------------------------------------------------------------------------------------------*/
 /*
 demo6 go语言Map(集合)
+-Map 是一种无序的键值对的集合。
+--Map 最重要的一点是通过 key 来快速检索数据，key 类似于索引，指向数据的值。
+--Map 是一种集合，所以我们可以像迭代数组和切片那样迭代它。不过，Map 是无序的，遍历 Map 时返回的键值对的顺序是不确定的。
+
+在获取 Map 的值时，如果键不存在，返回该类型的零值，例如 int 类型的零值是 0，string 类型的零值是 ""。
+Map 是引用类型，如果将一个 Map 传递给一个函数或赋值给另一个变量，它们都指向同一个底层数据结构，因此对 Map 的修改会影响到所有引用它的变量。
+
+1.定义 Map
+可以使用内建函数 make 或使用 map 关键字来定义 Map:
+// 使用 make 函数
+map_variable := make(map[KeyType]ValueType, initialCapacity)
+其中 KeyType 是键的类型，ValueType 是值的类型，initialCapacity 是可选的参数，用于指定 Map 的初始容量。Map 的容量是指 Map 中可以保存的键值对的数量，当 Map 中的键值对数量达到容量时，Map 会自动扩容。如果不指定 initialCapacity，Go 语言会根据实际情况选择一个合适的值。
+
+2.创建示例
+m := make(map[string]int)  //创建一个空map
+m1 := make(map[string]int, 10) // 创建一个初始容量为 10 的 Map
+
+-也可以使用字面量创建 Map：
+m := map[string]int{
+	"apple": 1,
+	"banana": 2,
+	"orange": 3,
+}
+
+-获取元素
+v1 := m["apple"]  // Map 的「键（key）」查找并获取对应「值（value）」
+v2, ok := m["pear"]  // 如果键不存在，ok 的值为 false，v2 的值为该类型的零值
+
+-修改元素：
+// 修改键值对
+m["apple"] = 5
+
+-获取 Map 的长度：
+len := len(m)
+
+-遍历 Map：
+for k, v := range m {
+    fmt.Printf("key=%s, value=%d\n", k, v)
+}
+
+-删除元素：
+delete(m, "banana")
+
 */
+
+func demo6() {
+	var siteMap map[string]string
+	siteMap = make(map[string]string)
+
+	/* map 插入 key - value 对,各个国家对应的首都 */
+	siteMap["Google"] = "谷歌"
+	siteMap["Baidu"] = "百度"
+	siteMap["Wiki"] = "维基百科"
+
+	/*使用键输出地图值 */
+	for site := range siteMap {
+		fmt.Println(site, "首都是", siteMap[site])
+	}
+
+	// 查看元素在集合中是否存在
+	name, ok := siteMap["Facebook"]
+	if ok {
+		fmt.Println("Facebook 的 站点是", name)
+	} else {
+		fmt.Println("Facebook 站点不存在")
+	}
+
+	/* 创建map */
+	countryCapitalMap := map[string]string{"France": "Paris", "Italy": "Rome", "Japan": "Tokyo", "India": "New delhi"}
+	fmt.Println("原始地图")
+	for country := range countryCapitalMap {
+		fmt.Println(country, "首都是：", countryCapitalMap[country])
+	}
+
+	// 删除元素
+	delete(countryCapitalMap, "France")
+	fmt.Println("法国条目被删除")
+	fmt.Println("删除元素后地图")
+
+	/*打印地图*/
+	for country := range countryCapitalMap {
+		fmt.Println(country, "首都是", countryCapitalMap[country])
+	}
+}
