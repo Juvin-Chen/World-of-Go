@@ -1,4 +1,4 @@
-# World-of-Go 🌏
+# World-of-Go 
 
 ![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat&logo=go)
 ![Progress](https://img.shields.io/badge/Status-Learning-brightgreen)
@@ -7,7 +7,7 @@ Welcome to **World-of-Go**!
 
 This repository documents my journey of learning the Go programming language, containing code examples, notes, and my study roadmap.
 
-## 📂 Repository Structure (仓库结构)
+## Repository Structure (仓库结构)
 目前仓库包含以下部分：
 
 - **`Stage1_BasicSyntax/`**: 
@@ -34,4 +34,4 @@ This repository documents my journey of learning the Go programming language, co
 - **`go.mod`**: 
   - Go 模块定义文件。
     
-> 这是一个用于学习的仓库，所以全是手搓的代码，格式和写法可能没那么规范，按个人习惯写的
+> 这是一个用于学习的仓库，大部分代码是手搓，格式和写法可能没那么规范，按个人习惯写的
