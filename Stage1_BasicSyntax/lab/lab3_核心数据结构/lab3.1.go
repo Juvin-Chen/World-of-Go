@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-
+	project()
 }
 
 // 任务1：数组倍增器
@@ -16,7 +16,7 @@ func task1() {
 	for _, value := range arr {
 		fmt.Printf("%d ", value)
 	}
-	fmt.Println("2.正确演示，按指针传递的方式：")
+	fmt.Println("\n2.正确演示，按指针传递的方式：")
 	doubleArrayByPtr(&arr)
 	for _, value := range arr {
 		fmt.Printf("%d ", value)
@@ -47,6 +47,7 @@ func doubleArrayByPtr(arr *[5]int) {
 // 任务2：动态数据流处理
 func task2() {
 	// 1.切片删除 (Delete)：
+	fmt.Println("==切片删除==")
 	data := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} //没有大小，即为切片，切片是引用类型传递
 	data = append(data[:4], 6, 7, 8, 9)
 	fmt.Println("删除指定数字5后的切片：")
@@ -55,21 +56,23 @@ func task2() {
 	}
 
 	// 2.切片备份
+	fmt.Println("\n==切片备份==")
 	backup := make([]int, len(data), cap(data))
-	copy(data, backup)
+	copy(backup, data)
 	for i := range data {
 		fmt.Printf("%d ", data[i])
 	}
+	backup[0] = 999
 	fmt.Println("\n判断数据是否备份正确:")
 	for i := range backup {
-		fmt.Printf("%d ", data[i])
+		fmt.Printf("%d ", backup[i])
 	}
 
 	// 3.扩容观察
-	fmt.Println("扩容观察")
+	fmt.Println("\n==扩容观察==")
 	for i := 0; i < 5; i++ {
 		data = append(data, 100)
-		fmt.Println("此时的len:%d,cap:%d", len(data), cap(data))
+		fmt.Printf("此时的len:%d,cap:%d\n", len(data), cap(data))
 	}
 }
 
@@ -97,7 +100,7 @@ func task3() {
 			max_name = name
 		}
 	}
-	fmt.Println("票数最多的候选人为%s,票数为%d", max_name, max_num)
+	fmt.Printf("票数最多的候选人为%s,票数为%d\n", max_name, max_num)
 }
 
 /* 综合实战项目：简易库存管理系统,这是一个模拟电商后台的小程序。你需要结合结构体（定义商品）、Map（存储数据）、指针（修改状态）和 函数。 */
@@ -133,7 +136,7 @@ func project() {
 	addProduct(inventory, 105, "Cap", 18.00, 2)
 	buyProduct(inventory, 105, 2)
 	buyProduct(inventory, 105, 1)
-	addProduct(inventory, 105, "Cap", 18.00, 2) //再添加两个库存
+	addProduct(inventory, 105, "Cap", 18.00, 2) // 再添加两个库存
 	showInventory(inventory)
 }
 
@@ -152,10 +155,11 @@ func showInventory(m map[int]*Product) {
 func addProduct(m map[int]*Product, id int, name string, price float64, stock int) {
 	product, ok := m[id]
 	if ok {
-		fmt.Println("商品已存在，正在为该商品添加库存")
+		fmt.Printf("商品%s已存在，正在为该商品添加库存\n", name)
 		product.stock += stock
+		fmt.Printf("已添加完成，该商品现在库存数量为%d\n", product.stock)
 	} else {
-		fmt.Println("商品不存在，正在创建一个新商品")
+		fmt.Printf("商品%s不存在，正在创建该新商品\n", name)
 		newproduct := &Product{id, name, price, stock}
 		m[id] = newproduct
 	}
@@ -165,11 +169,12 @@ func buyProduct(m map[int]*Product, id int, count int) {
 	product, ok := m[id]
 	if ok {
 		if product.stock < count {
-			fmt.Println("库存不足")
+			fmt.Printf("%s商品库存不足\n", product.name)
+		} else {
+			product.stock -= count
+			fmt.Printf("购买%s商品成功，共购买%d件商品，花费 %.2f 元，该商品还剩余%d件\n", product.name, count, float64(count)*product.price, product.stock)
 		}
-		product.stock -= count
-		fmt.Println("购买成功，共购买%d件商品，花费 %f 元\n 该商品还剩余%d件", count, float64(count)*product.price, product.stock)
 	} else {
-		fmt.Println("商品不存在")
+		fmt.Println("商品不存在,无法购买")
 	}
 }
