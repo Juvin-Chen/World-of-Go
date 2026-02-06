@@ -399,7 +399,7 @@ func demo4() {
 	nums = append(nums, 0)
 	printSlice(nums)
 
-	nums = append(nums, 1)
+	nums = append(nums, 1) //如果是要添加多个元素就多写几个, 比如append(nums, 1, 2, 3, 4)
 	printSlice(nums)
 
 	/* 创建切片 nums1 是之前切片的两倍容量*/
