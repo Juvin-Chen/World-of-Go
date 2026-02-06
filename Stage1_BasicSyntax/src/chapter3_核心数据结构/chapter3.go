@@ -393,7 +393,7 @@ func demo4() {
 	printSlice(number2)
 	// 上面两个就是创建子切片再打印的方式
 
-	// 5.append() & copy() 函数
+	// append() & copy() 函数
 	var nums []int
 	printSlice(nums)
 	nums = append(nums, 0)
