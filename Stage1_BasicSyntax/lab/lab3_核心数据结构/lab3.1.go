@@ -112,15 +112,16 @@ type Product struct {
 }
 
 func project() {
-	/*note:
-	 *只是声明了一个 nil map，直接赋值会panic，必须用 m := make(...)或者字面量初始化。
-	 *var inventory map[int]*Product
-	 *inventory = make(map[int]*Product)
-	 *字面量初始化（直接写值）
-	 *m1 := map[string]int{"Alice": 1, "Bob": 2}
-	 *非字面量初始化（用make函数）
-	 *m2 := make(map[string]int)
-	 */
+	/*
+		note:
+		只是声明了一个 nil map，直接赋值会panic，必须用 m := make(...)或者字面量初始化。
+		var inventory map[int]*Product
+		inventory = make(map[int]*Product)
+		字面量初始化（直接写值）
+		m1 := map[string]int{"Alice": 1, "Bob": 2}
+		非字面量初始化（用make函数）
+		m2 := make(map[string]int)
+	*/
 
 	iPhone := &Product{101, "iPhone", 5000.00, 20}
 	Laptop := &Product{102, "Laptop", 20.00, 5}
