@@ -1,4 +1,4 @@
-# Go Language Study Notes - Stage 1: 基础语法
+# 📘 第 1 章 基础语法
 
 > Based on `demo1.go` code practice.
 > **核心目标**: 掌握变量、常量、基础数据类型、运算符及 I/O 格式化。
