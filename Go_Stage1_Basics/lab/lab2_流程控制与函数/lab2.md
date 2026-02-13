@@ -1,4 +1,4 @@
-# 实验 2: The Functional Battle Engine (函数式战斗引擎)
+# 🧪 实验 2: The Functional Battle Engine (函数式战斗引擎)
 
 **实验目标**：不使用 `struct`（结构体将在 Stage 3 学习），仅靠**函数**和**闭包**来实现一个拥有状态记忆的战斗系统。
 
