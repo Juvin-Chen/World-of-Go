@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
+	"pay-project/internal/payment"
+	"pay-project/internal/payment/utils"
 	"pay-project/internal/user"
 )
 
 // 泛型插件化支付网关,实现一个模拟企业级的支付系统。
-
-// 订单流水号
-const recordID = 1001
 
 func main() {
 	// 1. 用户登录
@@ -65,11 +64,64 @@ PayStep:
 		switch payChoice {
 		case 1:
 			fmt.Println("你选择了【支付宝】支付，后续将调用支付宝支付插件")
-			// 这里后续可添加调用支付宝构造函数的逻辑
+			fmt.Println("请输入要支付的金额：")
+			var payamount float64
+			_, err := fmt.Scanln(&payamount)
+			if err != nil {
+				fmt.Println("发生输入错误！", err)
+				fmt.Scanln() // 清空缓冲区
+				continue
+			}
+			// 获取ID对应的账户余额
+			aliBalance, err := utils.GetPaymentBalance(u.AliPayID)
+			if err != nil {
+				fmt.Printf("读取支付宝余额失败：%v\n", err)
+				return
+			}
+
+			// 初始化支付宝支付插件
+			aliPayPlugin := &payment.AliPay{
+				BasePayment: payment.BasePayment{
+					Paytype:   "AliPay",
+					PaymentID: u.AliPayID,
+					Balance:   aliBalance,
+				},
+			}
+
+			// 初始化泛型支付网关，Gateway是泛型类型，必须指定[T]，这里T=string因为支付宝返回string类型的交易号
+			payGateway := &payment.Gateway[string]{}
+			payResult := payGateway.ProcessPayment(aliPayPlugin, payamount, "alipay")
+			fmt.Println(payResult)
 			return
 		case 2:
 			fmt.Println("你选择了【微信支付】，后续将调用微信支付插件")
-			// 这里后续可添加调用微信构造函数的逻辑
+			fmt.Println("请输入要支付的金额：")
+			var payamount float64
+			_, err := fmt.Scanln(&payamount)
+			if err != nil {
+				fmt.Println("发生输入错误！", err)
+				fmt.Scanln()
+				continue
+			}
+
+			wxBalance, err := utils.GetPaymentBalance(u.WeChatID)
+			if err != nil {
+				fmt.Printf("读取微信余额失败：%v\n", err)
+				return
+			}
+
+			wxPayPlugin := &payment.WeChat{
+				BasePayment: payment.BasePayment{
+					Paytype:   "WeChat",
+					PaymentID: u.WeChatID,
+					Balance:   wxBalance,
+				},
+			}
+
+			payGateway := &payment.Gateway[string]{}
+			payResult := payGateway.ProcessPayment(wxPayPlugin, payamount, "wechat")
+			fmt.Println(payResult)
+
 			return
 		default:
 			fmt.Println("无效输入，请输入1（支付宝）或2（微信支付）！")

@@ -20,11 +20,11 @@ func (b *BasePayment) Log(msg string) {
 }
 
 // 具体支付插件1 Ailpay
-type AilPay struct {
+type AliPay struct {
 	BasePayment
 }
 
-func (a *AilPay) Pay(amount float64) (string, error) {
+func (a *AliPay) Pay(amount float64) (string, error) {
 	a.Log(fmt.Sprintf("调用支付宝支付插件，发起支付，金额：%.2f元", amount))
 	if a.Balance < amount {
 		return "", fmt.Errorf("支付宝余额不足：当前%.2f元，需支付%.2f元", a.Balance, amount)
