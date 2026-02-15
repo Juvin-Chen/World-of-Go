@@ -9,16 +9,18 @@ type PaymentStrategy interface {
 
 // 基础组件，基类
 type BasePayment struct {
-	AppID string // 每种支付方式App的ID号
+	AppID  string // 每种支付方式App的ID号 / "WeChat1001 / AilPay1001"
+	credit int    // 每种支付方式账户内的余额
 }
 
 // 所有的支付方式都需要记录日志
 func (b *BasePayment) Log(msg string) {
-	fmt.Printf("支付日志：%s\n", msg) // 有实际意义
+	fmt.Printf("支付日志：%s\n", msg)
 }
 
 // 具体支付插件1 Ailpay
 type AilPay struct {
+	pay_type string
 	BasePayment
 }
 
@@ -30,6 +32,7 @@ func (a *AilPay) Pay(amount float64) string {
 
 // 具体支付插件2 WeChat
 type WeChat struct {
+	pay_type string
 	BasePayment
 }
 

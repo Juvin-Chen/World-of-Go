@@ -13,13 +13,20 @@ func main() {
 	fmt.Println("泛型插件化支付网关小程序欢迎您！")
 	var sign int
 	fmt.Println("登录请按1，退出请按0")
-	sign = fmt.Scanner(&sign)
+	sign, err := fmt.Scan(&sign)
+	if err != nil {
+		fmt.Println("输入错误：", err)
+		return
+	}
 	switch sign {
 	case 1:
 		var user1 User
 		user1.Login()
 	case 0:
-		f
+		fmt.Println("退出支付系统")
 		return
+	default: // 逻辑补充：处理用户输入非1/0的情况
+		fmt.Println("无效输入，请输入1或0")
+
 	}
 }
