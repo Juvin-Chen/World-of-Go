@@ -1,17 +1,17 @@
 [
     {
         "Name": "zhangsan",
-        "AiLPayID": "AliPay1001",
+        "AliPayID": "AliPay1001",
         "WeChatID": "WeChat1001"
     },
     {
         "Name": "lisi",
-        "AiLPayID": "AliPay1002",
+        "AliPayID": "AliPay1002",
         "WeChatID": "WeChat1002"
     },
     {
         "Name": "wangwu",
-        "AiLPayID": "AliPay1003",
+        "AliPayID": "AliPay1003",
         "WeChatID": "WeChat1003"
     }
 ]

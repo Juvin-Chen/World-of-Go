@@ -8,7 +8,7 @@ import (
 
 type User struct {
 	Name     string `json:"Name"`
-	AiLPayID string `json:"AiLPayID"`
+	AliPayID string `json:"AliPayID"`
 	WeChatID string `json:"WeChatID"`
 }
 
@@ -42,7 +42,7 @@ func (u *User) Login() bool {
 	loginSuccess := false
 	for _, user := range userList {
 		if user.Name == u.Name {
-			u.AiLPayID = user.AiLPayID
+			u.AliPayID = user.AliPayID
 			u.WeChatID = user.WeChatID
 			loginSuccess = true
 			break
@@ -52,7 +52,7 @@ func (u *User) Login() bool {
 	// 4. 输出结果
 	if loginSuccess {
 		fmt.Printf("登录成功！\n姓名：%s\n支付宝ID：%s\n微信ID：%s\n",
-			u.Name, u.AiLPayID, u.WeChatID)
+			u.Name, u.AliPayID, u.WeChatID)
 		return true
 	} else {
 		fmt.Println("登录失败：姓名不存在")
