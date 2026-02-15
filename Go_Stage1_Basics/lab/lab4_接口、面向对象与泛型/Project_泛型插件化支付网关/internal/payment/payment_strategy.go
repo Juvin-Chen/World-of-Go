@@ -4,39 +4,48 @@ import "fmt"
 
 // 定义一个接口，规定所有支付插件必须具备的能力
 type PaymentStrategy interface {
-	Pay(amount float64) string
+	Pay(amount float64) (string, error)
 }
 
-// 基础组件，基类
+// 基础支付结构体
 type BasePayment struct {
-	AppID  string // 每种支付方式App的ID号 / "WeChat1001 / AilPay1001"
-	credit int    // 每种支付方式账户内的余额
+	Paytype   string
+	PaymentID string  // 支付AppID号，如："WeChat1001 / AilPay1001"
+	Balance   float64 // 账户余额
 }
 
 // 所有的支付方式都需要记录日志
 func (b *BasePayment) Log(msg string) {
-	fmt.Printf("支付日志：%s\n", msg)
+	fmt.Printf("[%s%s] 支付日志：%s\n", b.Paytype, b.PaymentID, msg)
 }
 
 // 具体支付插件1 Ailpay
 type AilPay struct {
-	pay_type string
 	BasePayment
 }
 
-func (a *AilPay) Pay(amount float64) string {
-	fmt.Println("调用支付宝支付API...")
-
-	return "AliPay Success"
+func (a *AilPay) Pay(amount float64) (string, error) {
+	a.Log(fmt.Sprintf("调用支付宝支付插件，发起支付，金额：%.2f元", amount))
+	if a.Balance < amount {
+		return "", fmt.Errorf("支付宝余额不足：当前%.2f元，需支付%.2f元", a.Balance, amount)
+	}
+	// 扣减余额
+	a.Balance -= amount
+	a.Log(fmt.Sprintf("支付成功，剩余余额：%.2f元", a.Balance))
+	return "Alipay Success", nil
 }
 
 // 具体支付插件2 WeChat
 type WeChat struct {
-	pay_type string
 	BasePayment
 }
 
-func (w *WeChat) Pay(amount float64) string {
-	fmt.Println("调用微信支付API...")
-	return "WeChatId Success"
+func (w *WeChat) Pay(amount float64) (string, error) {
+	w.Log(fmt.Sprintf("发起支付，金额：%.2f元", amount))
+	if w.Balance < amount {
+		return "", fmt.Errorf("微信余额不足：当前%.2f元，需支付%.2f元", w.Balance, amount)
+	}
+	w.Balance -= amount
+	w.Log(fmt.Sprintf("支付成功，剩余余额：%.2f元", w.Balance))
+	return "WeChat Success", nil
 }
