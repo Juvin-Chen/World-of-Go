@@ -1,4 +1,4 @@
-package main
+package user
 
 import (
 	"encoding/json"
@@ -8,8 +8,8 @@ import (
 
 type User struct {
 	Name     string `json:"Name"`
-	Password string `json:"Password"`
-	Credit   int    `json:"Credit"`
+	AiLPayID string `json:"AiLPayID"`
+	WeChatID string `json:"WeChatID"`
 }
 
 // 进行登录校验，校验的用户数据单独存放在user.json中
@@ -22,7 +22,7 @@ func (u *User) Login() bool {
 	}
 
 	// 1. 打开 JSON 文件中的用户数据
-	file, err := os.Open("users.json")
+	file, err := os.Open("configs/users.json")
 	if err != nil {
 		fmt.Println("读取用户数据失败：", err)
 		return false
