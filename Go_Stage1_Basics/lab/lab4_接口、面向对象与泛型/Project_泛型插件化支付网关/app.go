@@ -93,6 +93,7 @@ PayStep:
 			payResult := payGateway.ProcessPayment(aliPayPlugin, payamount, "alipay")
 			fmt.Println(payResult)
 			return
+
 		case 2:
 			fmt.Println("你选择了【微信支付】，后续将调用微信支付插件")
 			fmt.Println("请输入要支付的金额：")
@@ -121,8 +122,8 @@ PayStep:
 			payGateway := &payment.Gateway[string]{}
 			payResult := payGateway.ProcessPayment(wxPayPlugin, payamount, "wechat")
 			fmt.Println(payResult)
-
 			return
+
 		default:
 			fmt.Println("无效输入，请输入1（支付宝）或2（微信支付）！")
 		}
