@@ -1,9 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"pay-project/internal/payment"
-	"pay-project/internal/payment/utils"
 	"pay-project/internal/user"
 )
 
@@ -54,7 +54,7 @@ PayStep:
 		fmt.Println("1. 支付宝")
 		fmt.Println("2. 微信支付")
 		fmt.Print("输入序号：")
-		_, err := fmt.Scanln(&payChoice)
+		_, err := fmt.Scan(&payChoice)
 		if err != nil {
 			fmt.Println("输入错误：请输入数字（1/2），", err)
 			fmt.Scanln() // 清空缓冲区
@@ -66,17 +66,11 @@ PayStep:
 			fmt.Println("你选择了【支付宝】支付，后续将调用支付宝支付插件")
 			fmt.Println("请输入要支付的金额：")
 			var payamount float64
-			_, err := fmt.Scanln(&payamount)
+			_, err := fmt.Scan(&payamount)
 			if err != nil {
 				fmt.Println("发生输入错误！", err)
 				fmt.Scanln() // 清空缓冲区
 				continue
-			}
-			// 获取ID对应的账户余额
-			aliBalance, err := utils.GetPaymentBalance(u.AliPayID)
-			if err != nil {
-				fmt.Printf("读取支付宝余额失败：%v\n", err)
-				return
 			}
 
 			// 初始化支付宝支付插件
@@ -84,46 +78,81 @@ PayStep:
 				BasePayment: payment.BasePayment{
 					Paytype:   "AliPay",
 					PaymentID: u.AliPayID,
-					Balance:   aliBalance,
 				},
+			}
+
+			aliPayBalance, err := aliPayPlugin.GetBalance()
+			if err != nil {
+				fmt.Printf("获取支付宝余额失败：%v\n", err)
+				return
+			} else {
+				fmt.Printf("支付宝（PaymentID：%s）当前余额：%.2f元\n", u.AliPayID, aliPayBalance)
+				aliPayPlugin.Balance = aliPayBalance
 			}
 
 			// 初始化泛型支付网关，Gateway是泛型类型，必须指定[T]，这里T=string因为支付宝返回string类型的交易号
 			payGateway := &payment.Gateway[string]{}
 			payResult := payGateway.ProcessPayment(aliPayPlugin, payamount, "alipay")
-			fmt.Println(payResult)
+			// 可视化打印支付结果
+			fmt.Println("==================== 支付结果 ====================")
+			fmt.Printf("支付方式：%s\n", "支付宝支付")
+			fmt.Printf("支付金额：%.2f 元\n", payamount)
+			// 将payResult序列化为带缩进的JSON字符串
+			resultJson, err := json.MarshalIndent(payResult, "", "    ")
+			if err != nil {
+				// 序列化失败时，降级用%+v打印
+				fmt.Printf("支付结果（完整内容）：%+v\n", payResult)
+			} else {
+				fmt.Printf("支付结果：\n%s\n", resultJson)
+			}
+			fmt.Println("==============================================================")
 			return
 
 		case 2:
 			fmt.Println("你选择了【微信支付】，后续将调用微信支付插件")
 			fmt.Println("请输入要支付的金额：")
 			var payamount float64
-			_, err := fmt.Scanln(&payamount)
+			_, err := fmt.Scan(&payamount)
 			if err != nil {
 				fmt.Println("发生输入错误！", err)
 				fmt.Scanln()
 				continue
 			}
 
-			wxBalance, err := utils.GetPaymentBalance(u.WeChatID)
-			if err != nil {
-				fmt.Printf("读取微信余额失败：%v\n", err)
-				return
-			}
-
-			wxPayPlugin := &payment.WeChat{
+			weChatPlugin := &payment.WeChat{
 				BasePayment: payment.BasePayment{
 					Paytype:   "WeChat",
 					PaymentID: u.WeChatID,
-					Balance:   wxBalance,
 				},
+			}
+			// 获取微信余额
+			weChatBalance, err := weChatPlugin.GetBalance()
+			if err != nil {
+				fmt.Printf("获取微信余额失败：%v\n", err)
+				return
+			} else {
+				fmt.Printf("微信（PaymentID：%s）当前余额：%.2f元\n", u.WeChatID, weChatBalance)
+				// 将获取到的余额赋值给微信插件结构体的Balance字段
+				weChatPlugin.Balance = weChatBalance
 			}
 
 			payGateway := &payment.Gateway[string]{}
-			payResult := payGateway.ProcessPayment(wxPayPlugin, payamount, "wechat")
-			fmt.Println(payResult)
-			return
+			payResult := payGateway.ProcessPayment(weChatPlugin, payamount, "wechat")
 
+			// 可视化打印支付结果
+			fmt.Println("==================== 支付结果 ====================")
+			fmt.Printf("支付方式：%s\n", "微信支付")
+			fmt.Printf("支付金额：%.2f 元\n", payamount)
+			// 将payResult序列化为带缩进的JSON字符串
+			resultJson, err := json.MarshalIndent(payResult, "", "    ")
+			if err != nil {
+				// 序列化失败时，降级用%+v打印
+				fmt.Printf("支付结果（完整内容）：%+v\n", payResult)
+			} else {
+				fmt.Printf("支付结果：\n%s\n", resultJson)
+			}
+			fmt.Println("==============================================================")
+			return
 		default:
 			fmt.Println("无效输入，请输入1（支付宝）或2（微信支付）！")
 		}

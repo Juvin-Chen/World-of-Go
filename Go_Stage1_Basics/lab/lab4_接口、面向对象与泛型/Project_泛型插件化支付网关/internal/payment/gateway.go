@@ -9,7 +9,7 @@ type Result[T any] struct {
 	Success bool    // 支付是否成功
 	PayType string  // 支付方式（alipay/wechat）
 	Amount  float64 // 支付金额
-	Data    T       // 泛型字段：存储不同支付方式的专属返回数据（如交易号）
+	Data    T       // 泛型字段：存储不同支付方式的专属返回数据（如交易号） string / int / 结构体类型
 	Message string  // 支付结果描述
 }
 

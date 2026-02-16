@@ -15,7 +15,7 @@ type User struct {
 // 登录逻辑：仅校验姓名，匹配后加载对应的支付宝/微信ID
 func (u *User) Login() bool {
 	fmt.Println("请输入姓名：")
-	_, err := fmt.Scanln(&u.Name)
+	_, err := fmt.Scan(&u.Name)
 	if err != nil {
 		fmt.Println("输入错误：", err)
 		return false

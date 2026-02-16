@@ -1,26 +1,26 @@
 [
     {
-        "PaymentID": "Alipay1001",
-        "Balance": 1000.0
+        "PaymentID": "AliPay1001",
+        "Balance": 700
     },
     {
-        "PaymentID": "Alipay1002",
-        "Balance": 2000.0
+        "PaymentID": "AliPay1002",
+        "Balance": 2000
     },
     {
-        "PaymentID": "Alipay1003",
-        "Balance": 2500.0
+        "PaymentID": "AliPay1003",
+        "Balance": 2500
     },
     {
         "PaymentID": "WeChat1001",
-        "Balance": 1500.0
+        "Balance": 1400
     },
     {
         "PaymentID": "WeChat1002",
-        "Balance": 3000.0
+        "Balance": 2600
     },
     {
         "PaymentID": "WeChat1003",
-        "Balance": 4000.0
+        "Balance": 4000
     }
 ]
