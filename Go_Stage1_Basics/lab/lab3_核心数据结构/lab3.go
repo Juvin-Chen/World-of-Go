@@ -6,11 +6,6 @@ import (
 
 type TaskFunc func()
 
-func task1()
-func task2()
-func task3()
-func project()
-
 func main() {
 	tasks := []TaskFunc{task1, task2, task3}
 
@@ -18,5 +13,7 @@ func main() {
 		task()
 		fmt.Println()
 	}
+
+	fmt.Println("lab3_Project:")
 	project()
 }

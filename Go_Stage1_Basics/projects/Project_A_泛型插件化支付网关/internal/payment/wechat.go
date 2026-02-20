@@ -19,7 +19,7 @@ func (w *WeChat) Pay(amount float64) (string, error) {
 		return "", fmt.Errorf("余额扣减失败，无法完成支付")
 	}
 
-	//执行微信支付
+	// 执行微信支付
 	w.Log(fmt.Sprintf("执行微信支付逻辑，扣减金额：%.2f元", amount))
 
 	// 返回支付结果

@@ -18,7 +18,7 @@ func (d *Dog) Move() {
 
 func task6() {
 	fmt.Println("编译器报错挑战:")
-	var m Mover = &Dog{}
+	var m Mover = &Dog{"poppy"}
 	m.Move()
 	/*
 		方法调用 vs 接口赋值（关键区别） /  对比task3

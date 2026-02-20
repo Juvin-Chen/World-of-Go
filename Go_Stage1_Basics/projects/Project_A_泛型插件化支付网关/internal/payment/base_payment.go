@@ -14,7 +14,7 @@ type PaymentStrategy interface {
 // 基础支付结构体
 type BasePayment struct {
 	Paytype   string
-	PaymentID string  // 支付AppID号，如："WeChat1001 / AilPay1001"
+	PaymentID string  // 支付AppID号，如："WeChat1001 / AliPay1001"
 	Balance   float64 // 账户余额
 }
 

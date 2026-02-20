@@ -2,7 +2,7 @@ package payment
 
 import "fmt"
 
-// 具体支付插件1 Ailpay
+// 具体支付插件1 Alipay
 type AliPay struct {
 	BasePayment
 }

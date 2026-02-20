@@ -185,5 +185,5 @@
 
 1. **新建文件**：`lab4.go`。
 2. **分块编写**：把 `Task 1` 到 `Task 6` 封装成 `task1()` 到 `task6()`。
-3. **Project 独立**：`project` 放在单独目录下编写。
+3. **Project 独立**：`project` 放在单独Go_Stage1_Basics/projects目录下编写。
 4. **关键点**：遇到 Task 4, 5, 6 的报错或陷阱时，**不要直接删掉**，用注释把报错原因写出来，证明你懂了。
