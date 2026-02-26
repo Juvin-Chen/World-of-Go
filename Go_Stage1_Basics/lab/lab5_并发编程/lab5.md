@@ -106,7 +106,7 @@
 
 为了让你彻底通透，我设计了 **3 个不同模式** 的项目。你可以全做，也可以选 2 个重点突破。
 
-### 🏗️ Project A: 并发日志处理流水线 (Pipeline Pattern)
+### 🏗️ Project 1: 并发日志处理流水线 (Pipeline Pattern)
 
 **难度**：⭐⭐⭐ **核心点**：Producer-Consumer 模型，Channel 串联。
 
@@ -128,7 +128,7 @@
 
 ------
 
-### 🏗️ Project B: 限制并发的爬虫 (Worker Pool Pattern)
+### 🏗️ Project 2: 限制并发的爬虫 (Worker Pool Pattern)
 
 **难度**：⭐⭐⭐⭐ **核心点**：控制并发数量（Semaphore/Worker Pool），防止把服务器搞崩。
 
@@ -148,7 +148,7 @@
 
 ------
 
-### 🏗️ Project C: 简单的并发聊天服务器 (Chat Room)
+### 🏗️ Project 3: 简单的并发聊天服务器 (Chat Room)
 
 **难度**：⭐⭐⭐⭐⭐ **核心点**：Select, Map 共享状态, 广播机制。
 
@@ -170,5 +170,5 @@
 ### 💡 建议
 
 1. **先做 Task 1-3**：这是基础中的基础，如果连 WaitGroup 和 Channel 阻塞都不熟，做项目会非常痛苦。
-2. **Project B 是经典面试题**：Worker Pool 模式在实际工作中用得最多（比如控制数据库并发查询数），强烈推荐优先做这个。
+2. **Project 2 是经典面试题**：Worker Pool 模式在实际工作中用得最多（比如控制数据库并发查询数），强烈推荐优先做这个。
 3. **死锁了别怕**：遇到 `fatal error: all goroutines are asleep - deadlock!` 是好事，说明你开始触碰到 Channel 的边界了。检查一下是不是“有发无收”或者“有收无发”。

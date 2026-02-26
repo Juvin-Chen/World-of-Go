@@ -10,5 +10,7 @@ func main() {
 		fmt.Println()
 		task()
 	}
-
+	project1()
+	fmt.Println()
+	project2()
 }
