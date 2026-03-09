@@ -40,6 +40,7 @@ func ListenAndServe(addr string, handler Handler) error {
 
 - `Addr` 字段表示网络地址（为 `""` 则是所有网络接口的 80 端口）。
 - `Handler` 字段（如果为 `nil`，就是 `DefaultServeMux`）。
+- `备注` http.Server 不仅只包含上面两个字段
 
 **总结：** 顶层函数本质上是调用了 `Server` 的 `ListenAndServe()` 函数。自己实例化 `http.Server` 结构体比直接调用 `http.ListenAndServe()` 更灵活。
 
@@ -49,9 +50,8 @@ func ListenAndServe(addr string, handler Handler) error {
 
 如果需要加 SSL/TLS 启动 HTTPS 服务，使用的是 `http.ListenAndServeTLS()` 或 `server.ListenAndServeTLS()`。
 
-Go
 
-```
+```go
 http.ListenAndServeTLS(addr, certFile, keyFile, handler)
 ```
 
@@ -63,9 +63,7 @@ http.ListenAndServeTLS(addr, certFile, keyFile, handler)
 
 `Handler` 在 Go 中是一个**接口（interface）**，它只定义了一个方法 `ServeHTTP()`。
 
-Go
-
-```
+```go
 type Handler interface {
     // http.ResponseWriter 是一个接口（interface）
     // *http.Request 是一个结构体指针（struct pointer）
@@ -83,9 +81,7 @@ type Handler interface {
 
 以下是普通 Handler 和 路由器 (ServeMux) 的流转对比图：
 
-代码段
-
-```
+```mermaid
 graph LR
     %% 普通 Handler 流程
     subgraph 单一处理器
@@ -108,9 +104,13 @@ graph LR
     style hn fill:#f0ad4e,stroke:#eea236,color:#fff
     style h3 fill:#f0ad4e,stroke:#eea236,color:#fff
 ```
+- **上半部分（多路路由器）：** `DefaultServeMux` 才是真正的路由（多路复用器 Multiplexer）。它的工作是“看人下菜碟”：如果请求是 `/a`，它就交给 `Handler 1`；如果是 `/b`，就交给 `Handler 2`。
 
-- **上半部分（单一处理器）：** 对应代码中的 `demo2_2()`。所有的请求（不管访问 `/login` 还是 `/pay`），全部一股脑交给了 `myHandler`。它没有做任何“分发”工作，所有请求都返回 "Hello web"。**这不叫路由。**
-- **下半部分（多路路由器）：** `DefaultServeMux` 才是真正的路由（多路复用器 Multiplexer）。它的工作是“看人下菜碟”：如果请求是 `/a`，它就交给 `Handler 1`；如果是 `/b`，就交给 `Handler 2`。
+- **下半部分（单一处理器）：** 对应代码中的 `demo2_2()`。所有的请求（不管访问 `/login` 还是 `/pay`），全部一股脑交给了 `myHandler`。它没有做任何“分发”工作，所有请求都返回 "Hello web"。**这不叫路由。**
+
+在 Go 语言的 net/http 标准库中，所有实现了 ServeHTTP 方法的类型，均被视作 Handler（处理器）。
+- 基础处理器的 ServeHTTP 方法：直接对请求进行处理并返回响应数据（例如直接写入 "Hello web" 这类响应内容）。
+- 路由分发处理器（如DefaultServeMux）的 ServeHTTP 方法：先解析请求的路径（如 /login），再根据预设的路由规则，将该请求转发至对应路径的专属处理器，由其执行 ServeHTTP 方法完成最终的请求处理。
 
 > **💡 总结：** 路由（`ServeMux`）的本质，其实也是一个特殊的 `Handler`（因为它也实现了 `ServeHTTP` 方法）。只不过它的 `ServeHTTP` 内部逻辑是：**根据 URL 路径，把请求转发给其他具体的 Handler。**
 

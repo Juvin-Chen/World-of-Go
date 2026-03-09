@@ -76,7 +76,7 @@ func demo2() {
 	http.ListenAndServe("localhost:8080", nil)
 }
 
-func demo2_2() {
+func demo2_() {
 	// 这种自定义路由器的方式，不同路径都会走到这个Handler，都会把这个hello world 输出
 	mh := myHandler{}
 	server := http.Server{
